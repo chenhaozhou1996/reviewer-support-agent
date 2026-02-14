@@ -21,7 +21,7 @@ async def main():
         options=ClaudeAgentOptions(
             system_prompt=SYSTEM_PROMPT,
             permission_mode="bypassPermissions",
-            max_turns=3,
+            max_turns=10,
             allowed_tools=["Read"],
         ),
     ):
