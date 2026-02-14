@@ -23,6 +23,8 @@ async def main():
             permission_mode="bypassPermissions",
             max_turns=10,
             allowed_tools=["Read"],
+            model="claude-opus-4-6",
+            thinking={"type": "enabled", "budget_tokens": 10000},
         ),
     ):
         if isinstance(message, AssistantMessage):
