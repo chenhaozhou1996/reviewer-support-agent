@@ -67,6 +67,7 @@ async def main():
         max_turns=10,
         model="claude-opus-4-6",
         thinking={"type": "enabled", "budget_tokens": 10000},
+        env={"CLAUDE_SKIP_PERMISSIONS": "1"},
         # Built-in Claude Code tools
         allowed_tools=[
             "Read",
