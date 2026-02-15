@@ -59,11 +59,11 @@ async def main():
         # MCP servers for academic paper search
         mcp_servers={
             "paper_search": {
-                "command": "uv",
+                "command": "uvx",
                 "args": [
-                    "run",
                     "--from",
                     "paper-search-mcp",
+                    "python",
                     "-m",
                     "paper_search_mcp.server",
                 ],
