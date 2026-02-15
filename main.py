@@ -118,19 +118,25 @@ async def main():
     )
 
     async for message in query(prompt=prompt, options=options):
-        # Log MCP server connection status
+        # Log MCP server connection status (only our servers, skip claude.ai ones)
         if isinstance(message, SystemMessage) and message.subtype == "init":
+            our_servers = {"paper_search", "pubmed", "arxiv"}
             mcp_servers = message.data.get("mcp_servers", [])
             connected = []
+            failed = []
             for server in mcp_servers:
                 status = server.get("status", "unknown")
                 name = server.get("name", "unknown")
+                if name not in our_servers and not any(name.startswith(s) for s in our_servers):
+                    continue  # skip claude.ai and other global MCP servers
                 if status == "connected":
                     connected.append(name)
                 else:
-                    print(f"  ⚠ {name}: {status}")
+                    failed.append(f"{name} ({status})")
             if connected:
                 print(f"  ✓ Connected: {', '.join(connected)}")
+            if failed:
+                print(f"  ✗ Failed: {', '.join(failed)}")
             print()
 
         if isinstance(message, AssistantMessage):
