@@ -137,9 +137,26 @@ async def main():
             for block in message.content:
                 if isinstance(block, TextBlock):
                     print(block.text)
+                elif hasattr(block, "name"):
+                    # Tool use block — show what the agent is doing
+                    tool_name = block.name
+                    if tool_name.startswith("mcp__"):
+                        parts = tool_name.split("__")
+                        tool_name = f"{parts[1]}.{parts[2]}" if len(parts) >= 3 else tool_name
+                    tool_input = getattr(block, "input", {})
+                    summary = ""
+                    if isinstance(tool_input, dict):
+                        for key in ["file_path", "pattern", "query", "url", "prompt"]:
+                            if key in tool_input:
+                                val = str(tool_input[key])
+                                summary = val[:80] + "..." if len(val) > 80 else val
+                                break
+                    print(f"  >> {tool_name}: {summary}")
         elif isinstance(message, ResultMessage):
             if message.is_error:
                 print(f"Error: {message.result}")
+            else:
+                print("\n--- Done ---")
 
 
 asyncio.run(main())
